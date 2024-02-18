@@ -24,7 +24,7 @@ julia> Pkg.add("MEPSDatasets")
   julia> ds = ENSds(dtg)           
   ```
 
-  Use `keys(ds)` to see available keys. Then more info can be obtained like e.g. 
+  Use `keys(ds)` to see available keys, more info can be obtained by e.g. 
 
   ```julia
   julia> ds["air_temperature_2m"]
@@ -41,7 +41,7 @@ julia> Pkg.add("MEPSDatasets")
      _ChunkSizes          = Int32[1, 1, 1, 1069, 949]
   ```
 
-  Then e.g. to download all members at `t=0` for the full domain use 
+  To download all members at `t=0` for the full domain use e.g. 
   
   ```julia
   t2m = ds["air_temperature_2m"][:,:,:,1,1]

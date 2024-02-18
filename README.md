@@ -1,12 +1,14 @@
 # MEPSDatasets.jl 
 
-MEPSDatasets.jl is a Julia package to access MEPS data from Met Norway. See the [catalog](https://thredds.met.no/thredds/catalog/meps25epsarchive/catalog.html) for available ensemble and deterministic data. 
+This Julia package gives access to the numerical weather prediction (NWP) data from The MetCoOp Ensemble Prediction System (MEPS).  See the [catalog](https://thredds.met.no/thredds/catalog/meps25epsarchive/catalog.html) for available data (ENS and control). 
+
+Learn more about the [MEPS datasets](https://github.com/metno/NWPdocs/wiki/MEPS-dataset) and  [data access](https://github.com/metno/NWPdocs/wiki/Data-access)
 
 ## Installation
 
 ```julia
-using Pkg
-Pkg.add("MEPSDatasets")
+julia> using Pkg
+julia> Pkg.add("MEPSDatasets")
 ```
 
 ## Usage
@@ -19,7 +21,7 @@ Pkg.add("MEPSDatasets")
   julia> ds = ENSds(dtg)           
   ```
 
-  Index the dataset like  e.g. 
+  Use `keys(ds)` to see available keys. Then more info can be obtained like e.g. 
 
   ```julia
   julia> ds["air_temperature_2m"]
@@ -36,7 +38,13 @@ Pkg.add("MEPSDatasets")
      _ChunkSizes          = Int32[1, 1, 1, 1069, 949]
   ```
 
-  Use `keys(ds)` to see available keys. Make sure to read the performance tips [here](https://alexander-barth.github.io/NCDatasets.jl/stable/performance/).
+  Then e.g. to download all members at `t=0` for the full domain use 
+  
+  ```julia
+  t2m = ds["air_temperature_2m"][:,:,:,1,1]
+  ```
+  
+  Make sure to read the performance tips [here](https://alexander-barth.github.io/NCDatasets.jl/stable/performance/).
 
 * To get the dataset for the control run use
 

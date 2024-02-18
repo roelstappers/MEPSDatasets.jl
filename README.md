@@ -6,6 +6,9 @@ Learn more about the [MEPS datasets](https://github.com/metno/NWPdocs/wiki/MEPS-
 
 ## Installation
 
+Add the [Harmonie registry](https://github.com/Hirlam/HarmonieRegistry) then
+
+
 ```julia
 julia> using Pkg
 julia> Pkg.add("MEPSDatasets")

@@ -4,7 +4,7 @@ import Dates, NCDatasets
 
 export ENSds, CTLds 
 
-const rooturl="https://thredds.met.no/thredds/dodsC/meps25epsarchive/"
+rooturl="https://thredds.met.no/thredds/dodsC/meps25epsarchive/"
 
 url(dtg) = joinpath(rooturl,Dates.format(dtg,"yyyy/mm/dd"))
 yyyymmddTHH(dtg) = Dates.format(dtg,"yyyymmddTHH")

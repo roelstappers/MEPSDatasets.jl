@@ -81,6 +81,15 @@ julia> Pkg.add("MEPSDatasets")
   ```
 
 
+## Note 
+
+At MET Norway you can set 
+
+```
+julia> MEPSDatasets.rooturl="/lustre/storeB/immutable/archive/projects/metproduction/MEPS"
+```
+
+
 ## Example ENS dataset
 
 

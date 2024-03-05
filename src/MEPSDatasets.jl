@@ -1,10 +1,13 @@
 module MEPSDatasets
 
-import Dates, NCDatasets 
+import Dates, NCDatasets
+import Preferences: @load_preference
 
 export ENSds, CTLds 
 
-rooturl="https://thredds.met.no/thredds/dodsC/meps25epsarchive/"
+threddsurl="https://thredds.met.no/thredds/dodsC/meps25epsarchive/"
+
+const rooturl = @load_preference("rooturl",threddsurl)  # default to treddsurl
 
 url(dtg) = joinpath(rooturl,Dates.format(dtg,"yyyy/mm/dd"))
 yyyymmddTHH(dtg) = Dates.format(dtg,"yyyymmddTHH")

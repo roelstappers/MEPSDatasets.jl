@@ -1,48 +1,44 @@
 module MEPSDatasets
 
-import Dates, NCDatasets
+using  Dates, NCDatasets
 import Preferences: @load_preference
 
 export ENSds, CTLds 
 
+
 threddsurl="https://thredds.met.no/thredds/dodsC/meps25epsarchive/"
 
-const rooturl = @load_preference("rooturl",threddsurl)  # default to treddsurl
+# const rooturl = @load_preference("rooturl",threddsurl)  # default to threddsurl
 
-url(dtg) = joinpath(rooturl,Dates.format(dtg,"yyyy/mm/dd"))
-yyyymmddTHH(dtg) = Dates.format(dtg,"yyyymmddTHH")
+const rooturl = "/lustre/storeA/immutable/archive/projects/metproduction/MEPS/"
 
-meps_lagged(dtg) = "meps_lagged_6_h_subset_2_5km_$(yyyymmddTHH(dtg))Z.nc"
-meps_det(dtg) = "meps_det_sfc_$(yyyymmddTHH(dtg))Z.ncml"
+memberdict =Dict(
+    "00" => "member_".*["02","09","12","00","01"],   # note it is important to keep this order mbr 00 and 01 are special
+    "01" => "member_".*["03","04","07","10","13"],
+    "02" => "member_".*["05","06","08","11","14"]
+)
+# /thredds/dodsC/meps25epsarchive/2025/02/02/03/member_12/meps_pl_60_20250202T03Z.nc
 
-mepsurl(dtg) = joinpath(url(dtg),meps_lagged(dtg))
-ctlurl(dtg) = joinpath(url(dtg),meps_det(dtg))
+# Example https://thredds.met.no/thredds/dodsC/meps25epsarchive/2025/02/02/03/member_12/meps_pl_60_20250202T03Z.nc
 
+"""
+type:  
+* pl  pressure level  
+* sfc surface level
+"""
+function ENSds(dtg::Dates.AbstractTime;fchour=0,type="sfc") 
+    urls = joinpath.(rooturl, 
+        Dates.format(dtg,"yyyy/mm/dd/HH"),
+        memberdict[lpad(Dates.Hour(dtg).value % 3,2,'0')],
+        "meps_$(type)_$(lpad(fchour,2,'0'))_$(Dates.format(dtg,"yyyymmddTHH"))Z.nc"
+    )
+    # println(urls)
 
-enscheck_dtg(dtg) = Dates.DateTime(Dates.today()) - dtg < Dates.Day(31) || error("ENS  only available for last 30 days")
-
-
-ENSds(dtg::AbstractArray) = NCDatasets.Dataset(mepsurl.(dtg),isnewdim=true, aggdim="forecast_reference_time", constvars=constvars)
-CTLds(dtg::AbstractArray) = NCDatasets.Dataset(ctlurl.(dtg),isnewdim=true, aggdim="forecast_reference_time",constvars=constvars)
-
-ENSds(dtg::Dates.AbstractTime) = NCDatasets.Dataset(mepsurl(dtg))
-CTLds(dtg::Dates.AbstractTime) = NCDatasets.Dataset(ctlurl(dtg))
-
-constvars = [
-    "time"
-    "ensemble_member"
-    "height0"
-    "height1"
-    "height2"
-    "height_above_msl"
-    "hybrid"
-    "isotherm_0C_level"
-    "mean_sea_level"
-    "pressure"
-    "surface"
-    "x"
-    "y"
-    "forecast_reference_time" 
-]
+    ds = NCDataset(urls[[3,4,5,1,2]],aggdim="mbr", isnewdim=true)
+    return view(ds,time=1,height0=1,height1=1,height2=1,height_above_msl=1) 
     
+end 
+
+
+   
 end # module MEPSDatasets

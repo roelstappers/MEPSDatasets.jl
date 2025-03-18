@@ -89,6 +89,9 @@ At MET Norway you can set
 julia> MEPSDatasets.rooturl="/lustre/storeB/immutable/archive/projects/metproduction/MEPS"
 ```
 
+## Arcus
+
+https://metcoop.smhi.se/dokuwiki/nwp/metcoop/arcus/userguide
 
 ## Example ENS dataset
 
